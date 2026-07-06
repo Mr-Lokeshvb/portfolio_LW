@@ -1897,6 +1897,24 @@ h3 {
     padding: 7px 8px;
     font-size: 0.66rem;
   }
+
+  .road-car {
+    transform-origin: center;
+    scale: 0.78;
+  }
+
+  .turn-sign {
+    width: 42px;
+    height: 42px;
+    border-width: 2px;
+  }
+
+  .turn-sign::before {
+    width: 18px;
+    height: 14px;
+    border-top-width: 5px;
+    border-left-width: 5px;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -1910,7 +1928,8 @@ h3 {
   }
 
   .road-dash,
-  .car-wheel {
+  .car-wheel,
+  .roof-rider {
     animation: none !important;
   }
 }
