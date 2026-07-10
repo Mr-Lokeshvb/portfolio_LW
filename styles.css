@@ -488,7 +488,7 @@ textarea {
   width: 120px !important;     /* adjust size here */
   height: 210px !important;   /* taller because image is vertical */
 
-  background: url('assets/img/car.png') no-repeat center;
+  background: url("assets/img/car.png") no-repeat center;
   background-size: contain;
 
   transform: translate(-50%, -50%);
