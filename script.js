@@ -7,6 +7,15 @@ const filterButtons = [...document.querySelectorAll("[data-filter]")];
 const projectCards = [...document.querySelectorAll(".project-card")];
 const revealTargets = [...document.querySelectorAll(".section, .project-card, .skill-meter")];
 const canvas = document.querySelector("#signalCanvas");
+
+function applyFilter(selected) {
+  filterButtons.forEach((item) => item.classList.toggle("active", item.dataset.filter === selected));
+  projectCards.forEach((card) => {
+    const shouldShow = selected === "all" || card.dataset.category === selected;
+    card.classList.toggle("is-hidden", !shouldShow);
+  });
+  buildRoad();
+}
 const ctx = canvas.getContext("2d");
 const roadLayer = document.querySelector(".scroll-road");
 const roadSvg = document.querySelector(".road-svg");
@@ -68,11 +77,11 @@ function buildRoad() {
     document.documentElement.scrollHeight,
     window.innerHeight
   );
-  const roadWidth = window.innerWidth;
+  const roadWidth = roadLayer.clientWidth;
   const top = Math.min(180, window.innerHeight * 0.22);
   const bottom = documentHeight - Math.min(180, window.innerHeight * 0.18);
-  const left = roadWidth < 700 ? roadWidth * 0.18 : roadWidth * 0.16;
-  const right = roadWidth < 700 ? roadWidth * 0.82 : roadWidth * 0.84;
+  const left = roadWidth * 0.22;
+  const right = roadWidth * 0.78;
   const center = roadWidth * 0.5;
   const segmentCount = Math.max(7, Math.round(documentHeight / 620));
   const step = (bottom - top) / segmentCount;
@@ -92,7 +101,7 @@ function buildRoad() {
   roadSvg.setAttribute("width", roadWidth);
   roadSvg.setAttribute("height", documentHeight);
   roadLength = roadTrack.getTotalLength();
-  roadDash.style.strokeDasharray = "2 22";
+  roadDash.style.strokeDasharray = "3 24";
 
   positionBiomes(documentHeight);
   positionRoadSigns();
@@ -114,13 +123,14 @@ function positionBiomes(documentHeight) {
 
 function positionRoadSigns() {
   if (!roadLength) return;
+  const roadWidth = roadLayer.clientWidth;
 
   roadSigns.forEach((sign, index) => {
     const progress = Number(sign.dataset.roadSign);
     const point = roadTrack.getPointAtLength(roadLength * progress);
     const side = index % 2 === 0 ? -1 : 1;
-    const offset = window.innerWidth < 700 ? 54 : 78;
-    const x = Math.min(window.innerWidth - 48, Math.max(48, point.x + side * offset));
+    const offset = roadWidth < 320 ? 48 : 64;
+    const x = Math.min(roadWidth - 42, Math.max(42, point.x + side * offset));
 
     sign.style.left = `${x}px`;
     sign.style.top = `${point.y}px`;
@@ -135,8 +145,9 @@ function positionTurnSigns() {
     const point = roadTrack.getPointAtLength(roadLength * progress);
     const next = roadTrack.getPointAtLength(Math.min(roadLength, roadLength * progress + 32));
     const side = next.x > point.x ? -1 : 1;
-    const offset = window.innerWidth < 700 ? 62 : 92;
-    const x = Math.min(window.innerWidth - 44, Math.max(44, point.x + side * offset));
+    const roadWidth = roadLayer.clientWidth;
+    const offset = roadWidth < 320 ? 46 : 62;
+    const x = Math.min(roadWidth - 38, Math.max(38, point.x + side * offset));
     const y = point.y - (index % 2 === 0 ? 26 : -18);
 
     sign.style.left = `${x}px`;
@@ -151,8 +162,10 @@ function updateRoadProgress() {
   const progress = Math.min(1, Math.max(0, window.scrollY / maxScroll));
   const currentLength = roadLength * progress;
   const point = roadTrack.getPointAtLength(currentLength);
-  const lookAhead = roadTrack.getPointAtLength(Math.min(roadLength, currentLength + 8));
+  const lookAhead = roadTrack.getPointAtLength(Math.min(roadLength, currentLength + 18));
+  const lookBehind = roadTrack.getPointAtLength(Math.max(0, currentLength - 18));
   const angle = Math.atan2(lookAhead.y - point.y, lookAhead.x - point.x) * (180 / Math.PI);
+  const turnDelta = lookAhead.x - lookBehind.x;
   const activeBiome = [...biomes]
     .reverse()
     .find((biome) => progress >= biome.start && progress <= biome.end);
@@ -160,7 +173,8 @@ function updateRoadProgress() {
   roadLayer.dataset.biome = activeBiome ? activeBiome.name : "city";
   roadCar.style.left = `${point.x}px`;
   roadCar.style.top = `${point.y}px`;
-  roadCar.style.transform = `translate(-50%, -50%) rotate(${angle}deg)`;
+  roadCar.style.transform = `translate(-50%, -50%) rotate(${angle + 90}deg)`;
+  roadCar.style.setProperty("--steer", `${Math.max(-4, Math.min(4, turnDelta * 0.08))}deg`);
 }
 
 function requestRoadUpdate() {
@@ -264,16 +278,11 @@ navLinks.forEach((link) => {
 
 filterButtons.forEach((button) => {
   button.addEventListener("click", () => {
-    const selected = button.dataset.filter;
-
-    filterButtons.forEach((item) => item.classList.toggle("active", item === button));
-    projectCards.forEach((card) => {
-      const shouldShow = selected === "all" || card.dataset.category === selected;
-      card.classList.toggle("is-hidden", !shouldShow);
-    });
-    buildRoad();
+    applyFilter(button.dataset.filter);
   });
 });
+
+applyFilter("web");
 
 window.addEventListener("scroll", () => {
   setHeaderState();
