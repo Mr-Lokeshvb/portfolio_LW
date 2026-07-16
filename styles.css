@@ -1217,14 +1217,14 @@ h3 {
   color: var(--ink);
 }
 
-.project-grid {
+/* .project-grid {
   display: grid;
   grid-template-columns: 1fr);
   gap: 24px;
   width: 100%;
   max-width: var(--max);
   margin: 0;
-}
+} */
 
 .project-card {
   overflow: hidden;
@@ -1278,7 +1278,7 @@ h3 {
 }
 
 .project-card {
-  display: grid;
+  display: block;
   grid-template-columns: 0.68fr 1.88fr;
   gap: 24px;
   align-items: start;
