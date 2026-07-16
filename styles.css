@@ -1306,6 +1306,26 @@ h3 {
   border-radius: 12px;
 }
 
+.project-gallery {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 14px;
+    margin: 24px 0;
+}
+
+.project-gallery img {
+    width: 100%;
+    height: 220px;
+    object-fit: cover;
+    border-radius: 14px;
+    border: 1px solid rgba(255,255,255,.08);
+    transition: transform .3s ease, box-shadow .3s ease;
+}
+
+.project-gallery img:hover {
+    transform: translateY(-4px) scale(1.02);
+    box-shadow: 0 10px 25px rgba(0,0,0,.25);
+}
 .project-content {
   display: grid;
   gap: 16px;
