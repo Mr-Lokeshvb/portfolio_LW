@@ -61,17 +61,17 @@
       <div class="turn-sign right-turn" data-turn-sign="0.64">Turn</div>
       <div class="turn-sign left-turn" data-turn-sign="0.82">Turn</div>
       <div class="road-sign" data-road-sign="0.08">About Me</div>
-      <div class="road-sign" data-road-sign="0.25">Projects</div>
-      <div class="road-sign" data-road-sign="0.46">Work Experience</div>
+      <div class="road-sign" data-road-sign="0.25">Work Experience</div>
+      <div class="road-sign" data-road-sign="0.46">Projects</div>
       <div class="road-sign" data-road-sign="0.62">Skills</div>
-      <div class="road-sign" data-road-sign="0.79">Achievements</div>
-      <div class="road-sign" data-road-sign="0.9">Education</div>
+      <div class="road-sign" data-road-sign="0.79">Education</div>
+      <div class="road-sign" data-road-sign="0.9">Achievements</div>
       <div class="road-sign finish" data-road-sign="0.97">Contact</div>
     </div>
 
     <header class="site-header" data-elevate>
       <a class="brand" href="#home" aria-label="Go to home">
-        <span class="brand-mark">LV</span>
+        <span class="brand-mark">&lt;/&gt;</span>
         <span>
           <strong>Lokeshwaran V</strong>
           <small>Software Engineer</small>
@@ -450,21 +450,26 @@
               Resume PDF</a>
           </div>
         </div>
-        <form class="contact-form" action="mailto:lokeshvb30000@gmail.com" method="post" enctype="text/plain">
-          <label>
-            <span>Name</span>
-            <input type="text" name="name" placeholder="Hiring Manager" />
-          </label>
-          <label>
-            <span>Email</span>
-            <input type="email" name="email" placeholder="hello@company.com" />
-          </label>
-          <label>
-            <span>Message</span>
-            <textarea name="message" rows="5" placeholder="Tell me about the role or project"></textarea>
-          </label>
-          <button class="button" type="submit">Start Conversation</button>
-        </form>
+        <form class="contact-form" id="contact-form">
+  <label>
+    <span>Name</span>
+    <input type="text" name="name" placeholder="Hiring Manager" required>
+  </label>
+
+  <label>
+    <span>Email</span>
+    <input type="email" name="email" placeholder="hello@company.com" required>
+  </label>
+
+  <label>
+    <span>Message</span>
+    <textarea name="message" rows="5" placeholder="Tell me about the role or project" required></textarea>
+  </label>
+
+  <button class="button" type="submit">
+    Start Conversation
+  </button>
+</form>
       </section>
     </main>
 
@@ -472,7 +477,42 @@
       <p>Lokeshwaran V - Software Engineer Portfolio</p>
       <a href="#home">Back to top</a>
     </footer>
+<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
 
+<script>
+emailjs.init({
+    publicKey: "rwsYWuMA3s-UPUdDO",
+});
+
+document
+.getElementById("contact-form")
+.addEventListener("submit", function(e){
+
+    e.preventDefault();
+
+    emailjs.sendForm(
+        "service_cotyj78",
+        "template_asc094v",
+        this
+    ).then(function(){
+
+        alert("Message sent successfully!");
+
+        document.getElementById("contact-form").reset();
+
+    }).catch(function(error){
+
+        alert("Failed to send.");
+
+        console.log(error);
+
+    });
+
+});
+</script>
+
+</body>
+</html>
     <script src="script.js"></script>
   </body>
 </html>
