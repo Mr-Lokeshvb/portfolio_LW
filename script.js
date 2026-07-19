@@ -41,7 +41,10 @@ let roadLength = 0;
 let ticking = false;
 
 const savedTheme = localStorage.getItem("portfolio-theme");
-if (savedTheme === "light") {
+if (savedTheme) {
+  root.classList.toggle("light", savedTheme === "light");
+} else {
+  // Default to light mode on first visit
   root.classList.add("light");
 }
 
